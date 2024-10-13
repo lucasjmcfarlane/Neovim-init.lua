@@ -141,5 +141,13 @@ require("mason-lspconfig").setup({
 require'lspconfig'.clangd.setup{on_attach=on_attach, capabilities = capabilities}
 require'lspconfig'.rust_analyzer.setup{on_attach=on_attach, capabilities = capabilities}
 require'lspconfig'.zls.setup{on_attach=on_attach, capabilities=capabilities}
-require'lspconfig'.pylsp.setup{on_attach=on_attach, capabilities=capabilities, settings={pylsp={plugins={pycodestyle={ignore={'E501'}}}}}}
+
+require'lspconfig'.pylsp.setup{
+    on_attach=on_attach, capabilities=capabilities, 
+
+    settings={
+        pylsp={plugins={pycodestyle={enabled = false}}}
+    }
+}
+
 require'lspconfig'.ols.setup{on_attach=on_attach, capabilities=capabilities}
