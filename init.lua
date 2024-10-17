@@ -133,17 +133,14 @@ require("mason").setup()
 require("mason-lspconfig").setup({
     ensure_installed = { --ADD NEW LSP's HERE
         "clangd", --C/C++
-        "rust_analyzer", --Rust
         "pylsp", --Python
         "zls", --Zig
-        "ols", --Odin
     },
     automatic_installation = true
 })
 
 --Configure LSP's 
 require'lspconfig'.clangd.setup{on_attach=on_attach, capabilities = capabilities}
-require'lspconfig'.rust_analyzer.setup{on_attach=on_attach, capabilities = capabilities}
 require'lspconfig'.zls.setup{on_attach=on_attach, capabilities=capabilities}
 
 require'lspconfig'.pylsp.setup{
@@ -153,5 +150,3 @@ require'lspconfig'.pylsp.setup{
         pylsp={plugins={pycodestyle={enabled = false}}}
     }
 }
-
-require'lspconfig'.ols.setup{on_attach=on_attach, capabilities=capabilities}
