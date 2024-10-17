@@ -43,6 +43,7 @@ require("lazy").setup({
 	{"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"}, --syntax highlighting
     {"Raimondi/delimitMate"}, --auto close brackets, quotes etc.
     {"nvim-tree/nvim-tree.lua"}, --file tree
+    {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'}, --add "tabs"
 
     --LSP STUFF
     {"williamboman/mason.nvim"}, --package manager for LSP's
@@ -99,6 +100,9 @@ require("nvim-tree").setup({
   renderer = {group_empty = true,},
   filters = {dotfiles = true,},
 })
+
+--bufferline configuration
+require("bufferline").setup{}
 
 ---LSP STUFF---
 
