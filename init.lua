@@ -36,27 +36,32 @@ vim.opt.rtp:prepend(lazypath)
 
 --update plugins with :Lazy
 require("lazy").setup({
-    { "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...}, --colorscheme
-    {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"}, --syntax highlighting
-    {"Raimondi/delimitMate"}, --auto close brackets, quotes etc.
+    { "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...}, --gruvbox colorscheme
+    {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"}, --greatly improved syntax highlighting
+    {"Raimondi/delimitMate"}, --auto close brackets, quotes, etc.
 
     { --add indentation guides
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
-        ---@module "ibl"
-        ---@type ibl.config
-        opts = {},
     },
 
-    {"neovim/nvim-lspconfig"}, -- provides default LSP configurations
-    {"hrsh7th/nvim-cmp"}, --autocompletion engine that's smarter than the built-in one
-    {"hrsh7th/cmp-nvim-lsp"}, --provides the new autocompletion engine's capabilities to the LSP's
     { "rafamadriz/friendly-snippets" }, --add snippets
-    {"saadparwaiz1/cmp_luasnip"}, -- make the snippets work with cmp
-    { --snippet engine
-        "L3MON4D3/LuaSnip",
-        dependencies = { "rafamadriz/friendly-snippets" },
+
+    { --autocompletion engine
+        'saghen/blink.cmp',
+        dependencies = 'rafamadriz/friendly-snippets',
+        version = 'v0.*',
+        opts = {
+            keymap = { preset = 'super-tab' },
+            appearance = {
+                use_nvim_cmp_as_default = true,
+                nerd_font_variant = 'normal'
+            },
+            signature = { enabled = true }
+        },
     },
+
+    {"neovim/nvim-lspconfig", dependencies = 'saghen/blink.cmp'}, -- provides default LSP configurations
 })
 
 --apply Gruvbox colorscheme
@@ -78,39 +83,8 @@ require'nvim-treesitter.configs'.setup {
 --indent_blankline configuration
 require("ibl").setup()
 
---load snippets
-require("luasnip.loaders.from_vscode").lazy_load()
-
---autocompletion configuration
-local cmp = require("cmp")
-cmp.setup({
-    snippet = {
-        -- REQUIRED - you must specify a snippet engine
-        expand = function(args)
-            --vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-            require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-            -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-            -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-            -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
-        end,
-    },
-
-    mapping = cmp.mapping.preset.insert({
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    }),
-    sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'luasnip'},
-    }, 
-    {
-        { name = 'buffer' },
-    })
-})
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
+--set autocompletion capabilities
+local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 --add LSP's here
 require('lspconfig').zls.setup{capabilities=capabilities} --Zig
